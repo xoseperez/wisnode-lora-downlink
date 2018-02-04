@@ -1,0 +1,5 @@
+.pioenvs
+.piolibdeps
+credentials.h
+*.gch
+firmware

@@ -1,0 +1,165 @@
+[
+    {
+        "id": "38e5f265.b84bf6",
+        "type": "function",
+        "z": "78cdf53a.7b1384",
+        "name": "response",
+        "func": "// Get current values\nvar target = (flow.get('led') || 0) + 0x30;\nvar current = msg.payload[0];\n\n// If no change return null object\nif (target == current) return null;\n\n// Otherwise return downlink info\nreturn {\n    dev_id: msg.dev_id,\n    port: msg.port,\n    schedule: \"replace\",\n    confirmed: false,\n    payload: Buffer.from([target])\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 300,
+        "y": 200,
+        "wires": [
+            [
+                "453bd37f.acffd4",
+                "8bdbb5a5.14542"
+            ]
+        ]
+    },
+    {
+        "id": "5465a099.a2b0d",
+        "type": "debug",
+        "z": "78cdf53a.7b1384",
+        "name": "event",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "true",
+        "x": 470,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "cd6ee893.ccce68",
+        "type": "debug",
+        "z": "78cdf53a.7b1384",
+        "name": "uplink",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 470,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "453bd37f.acffd4",
+        "type": "debug",
+        "z": "78cdf53a.7b1384",
+        "name": "downlink",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 480,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "b043ec2d.b37a5",
+        "type": "ttn device",
+        "z": "78cdf53a.7b1384",
+        "name": "ttn event",
+        "app": "eb7ef383.ac8618",
+        "dev_id": "",
+        "event": "activations",
+        "x": 120,
+        "y": 80,
+        "wires": [
+            [
+                "5465a099.a2b0d"
+            ]
+        ]
+    },
+    {
+        "id": "8bdbb5a5.14542",
+        "type": "ttn send",
+        "z": "78cdf53a.7b1384",
+        "name": "ttn downlink",
+        "app": "eb7ef383.ac8618",
+        "dev_id": "",
+        "port": "",
+        "x": 490,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "59b4090a.26598",
+        "type": "ttn message",
+        "z": "78cdf53a.7b1384",
+        "name": "ttn.uplink",
+        "app": "eb7ef383.ac8618",
+        "dev_id": "",
+        "field": "",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "cd6ee893.ccce68",
+                "38e5f265.b84bf6"
+            ]
+        ]
+    },
+    {
+        "id": "87db43d9.412138",
+        "type": "inject",
+        "z": "78cdf53a.7b1384",
+        "name": "ON",
+        "topic": "",
+        "payload": "1",
+        "payloadType": "num",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 320,
+        "wires": [
+            [
+                "f5371fb7.56d4f8"
+            ]
+        ]
+    },
+    {
+        "id": "7ac5f3b6.26dd8c",
+        "type": "inject",
+        "z": "78cdf53a.7b1384",
+        "name": "OFF",
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "f5371fb7.56d4f8"
+            ]
+        ]
+    },
+    {
+        "id": "f5371fb7.56d4f8",
+        "type": "function",
+        "z": "78cdf53a.7b1384",
+        "name": "LED",
+        "func": "flow.set('led', msg.payload);\nif (msg.payload == 1) {\n    node.status({fill:\"green\",shape:\"dot\",text:\"ON\"});\n} else {\n    node.status({fill:\"red\",shape:\"dot\",text:\"OFF\"});\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 310,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "eb7ef383.ac8618",
+        "type": "ttn app",
+        "z": "",
+        "appId": "change_this",
+        "region": "eu",
+        "accessKey": "change_this"
+    }
+]
